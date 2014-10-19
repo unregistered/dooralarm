@@ -1,0 +1,6 @@
+*.DS_Store
+server/build
+server/src/main/resources/sounds
+server/.gradle
+*.class
+server/.idea
