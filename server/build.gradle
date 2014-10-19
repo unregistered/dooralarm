@@ -1,6 +1,9 @@
 apply plugin: 'java'
+apply plugin:'application'
 
-sourceCompatibility = 1.5
+mainClassName = "com.unregistered.Main"
+
+sourceCompatibility = 1.7
 version = '1.0'
 
 repositories {
@@ -13,6 +16,16 @@ dependencies {
     compile 'org.apache.commons:commons-io:1.3.2'
     compile files('lib/RXTXcomm.jar')
     compile files('lib/xbee-api-0.9.jar')
+}
+
+run {
+    systemProperty "java.library.path", 'lib'
+}
+
+jar {
+    manifest {
+        attributes 'Main-Class': 'com.unregistered.Main'
+    }
 }
 
 task generateIndex(type: Exec) {

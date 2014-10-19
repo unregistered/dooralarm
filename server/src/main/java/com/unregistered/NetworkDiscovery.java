@@ -20,6 +20,9 @@ public class NetworkDiscovery {
             if (response.isOk()) {
                 System.out.println("Got response to ATND");
                 int[] stream = response.getValue();
+                if (stream.length == 0) {
+                    System.out.println("ATND found no nodes!");
+                }
                 return nodesForIntStream(stream);
             }
         } catch (XBeeTimeoutException e) {
