@@ -3,7 +3,6 @@ apply plugin:'application'
 
 mainClassName = "com.unregistered.Main"
 
-sourceCompatibility = 1.7
 version = '1.0'
 
 repositories {
