@@ -2,36 +2,90 @@
 #define trigPin 5 // Trigger Pin
 #define LEDPin 13 // Onboard LED
 
-#define LEDTHRESHOLD 30
-#include "MedianFilter.h"
+#define MY_XB_ADDRESS 0x2
+#define BASE_XB_ADDRESS 0x1
 
-MedianFilter filter;
+#define RANGE_THRESHOLD 90
+#include "MedianFilter.h"
+#include "XBee.h"
+
+MedianFilter filter = MedianFilter();
+XBee xbee = XBee();
 
 void setup() {
 	Serial.begin (9600);
 	pinMode(trigPin, OUTPUT);
 	pinMode(echoPin, INPUT);
 	pinMode(LEDPin, OUTPUT); // Use LED indicator (if required)
-	filter = MedianFilter();
+
+	xbee.begin(Serial);
 }
 
+long timeOfLastHeartbeat = 0;
+long timeOfLastRead = 0;
+long timeOfLastCompute = 0;
+
+typedef enum {NOTHINGINRANGE, SOMETHINGINRANGE} range_state_t;
+range_state_t currentState = NOTHINGINRANGE;
+
 void loop() {
-	for (int i=0; i < FILTERLENGTH; i++) {
-		long distance = getDistance();
-		filter.addDataPoint(distance);
-		delayMicroseconds(100);
+	long now = millis();
+
+	xbee.readPacket();
+	if (xbee.getResponse().isAvailable()) {
+		// Serial.println("Got packet");
 	}
 
-	long median = filter.getMedian();
-	Serial.println(median);
+	if (now > timeOfLastRead + 100) {
+		// Just read and store the latest datapoint
+		timeOfLastRead = now;
 
-	if (median < LEDTHRESHOLD) {
+		long distance = getDistance();
+		filter.addDataPoint(distance);
+	}
+
+	if (now > timeOfLastCompute + 500) {
+		timeOfLastCompute = now;
+
+		// Compute median, update state
+		long median = filter.getMedian();
+
+		if (currentState == NOTHINGINRANGE) {
+			if (median < RANGE_THRESHOLD) {
+				currentState = SOMETHINGINRANGE;
+				updateLED();
+				sendToBase(median);
+			}
+		} else if (currentState == SOMETHINGINRANGE) {
+			if (median > RANGE_THRESHOLD) {
+				currentState = NOTHINGINRANGE;
+				updateLED();
+				sendToBase(median);
+			}
+		}
+	}
+
+	if (now > timeOfLastHeartbeat + 10000) {
+		// Send heartbeat
+		timeOfLastHeartbeat = now;
+		sendToBase(-1);
+	}
+
+	delay(1);
+}
+
+void updateLED() {
+	if (currentState == SOMETHINGINRANGE) {
 		digitalWrite(LEDPin, HIGH);
 	} else {
 		digitalWrite(LEDPin, LOW);
 	}
+}
 
-	delay(1000);
+void sendToBase(uint8_t distance) {
+	uint8_t payload[] = {distance};
+	Tx16Request tx = Tx16Request(BASE_XB_ADDRESS, payload, sizeof(payload));
+	xbee.send(tx);
 }
 
 long getDistance() {
