@@ -19,7 +19,8 @@ dependencies {
 }
 
 run {
-    systemProperty "java.library.path", 'lib'
+    systemProperty "java.library.path", '/usr/lib/jni'
+    systemProperty "serialport", System.getProperty("serialport")
 }
 
 jar {

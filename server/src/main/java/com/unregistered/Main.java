@@ -33,7 +33,8 @@ public class Main {
     }
 
     public static void setup() throws Exception {
-        xbee.open("/dev/tty.usbserial-A601D6I3", 9600);
+        String port = System.getProperty("serialport");
+        xbee.open(port, 9600);
         System.out.println("Setup complete");
     }
 
