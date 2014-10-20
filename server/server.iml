@@ -21,6 +21,10 @@
     <orderEntry type="library" exported="" name="Gradle: xbee-api-0.9" level="project" />
     <orderEntry type="library" exported="" name="Gradle: log4j-1.2.17" level="project" />
     <orderEntry type="library" exported="" name="Gradle: commons-io-1.3.2" level="project" />
+    <orderEntry type="library" exported="" name="Gradle: httpclient-4.0-alpha4" level="project" />
+    <orderEntry type="library" exported="" name="Gradle: httpcore-4.0-beta1" level="project" />
+    <orderEntry type="library" exported="" name="Gradle: commons-logging-1.1.1" level="project" />
+    <orderEntry type="library" exported="" name="Gradle: commons-codec-1.3" level="project" />
   </component>
 </module>
 

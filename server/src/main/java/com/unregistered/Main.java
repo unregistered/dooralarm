@@ -3,14 +3,12 @@ package com.unregistered;
 import com.rapplogic.xbee.api.*;
 import com.rapplogic.xbee.api.wpan.RxResponse64;
 
-import java.util.Arrays;
 import java.util.List;
-import java.util.Random;
 
 public class Main {
-    private static int THRESHOLD = 90; // From the arduino sketch: when to set off an alarm
+    private static final int THRESHOLD = 90; // From the arduino sketch: when to set off an alarm
     private static XBee xbee = new XBee();
-    private static RandomAudioPlayer ap = new RandomAudioPlayer();
+    private static AlarmService alarm = new AlarmService();
 
     public static void main(String[] args) throws Exception {
         setup();
@@ -70,7 +68,7 @@ public class Main {
                 // This is a heartbeat message, we can ignore
             } else {
                 if (reading < THRESHOLD) {
-                    triggerAlarm();
+                    alarm.triggerAlarm();
                 }
             }
             System.out.println("Reading: " + reading);
@@ -78,12 +76,4 @@ public class Main {
         }
     }
 
-    public static void triggerAlarm() {
-        System.out.println("ALARM!");
-        try {
-            ap.playRandomSound();
-        } catch(Exception e) {
-            System.err.println("Could not play sound" + e);
-        }
-    }
 }
