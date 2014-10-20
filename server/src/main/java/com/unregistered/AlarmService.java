@@ -6,8 +6,8 @@ import org.apache.http.client.methods.HttpPost;
 import org.apache.http.impl.client.DefaultHttpClient;
 
 public class AlarmService {
-    private static final String ALARM_ENDPOINT = "http://localhost:4567/play/walkingin";
-    private static long lastAlarmTriggeredAt = 0;
+    private static final String ALARM_ENDPOINT = "http://raspberrypi.local:4567/play/walkingin";
+    private static long lastAlarmTriggeredAt = System.currentTimeMillis() + 10000; // Nothing for first 10 seconds on boot
 
     public void triggerAlarm() {
         long now = System.currentTimeMillis();

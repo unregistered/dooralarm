@@ -1,5 +1,7 @@
 require 'sinatra'
 
+set :bind, '0.0.0.0'
+
 get '/' do
   return """
   <h1>Audio Server listening</h1>

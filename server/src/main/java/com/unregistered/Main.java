@@ -6,7 +6,7 @@ import com.rapplogic.xbee.api.wpan.RxResponse64;
 import java.util.List;
 
 public class Main {
-    private static final int THRESHOLD = 90; // From the arduino sketch: when to set off an alarm
+    private static final int THRESHOLD = 60; // From the arduino sketch: when to set off an alarm
     private static XBee xbee = new XBee();
     private static AlarmService alarm = new AlarmService();
 
