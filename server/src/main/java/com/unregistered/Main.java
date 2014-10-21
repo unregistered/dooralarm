@@ -7,7 +7,6 @@ import java.sql.Timestamp;
 import java.util.List;
 
 public class Main {
-    private static final int THRESHOLD = 80; // From the arduino sketch: when to set off an alarm
     private static XBee xbee = new XBee();
     private static AlarmService alarm = new AlarmService();
 
@@ -20,9 +19,12 @@ public class Main {
             }
         }));
 
-        scanNetwork();
-
         while (true) {
+            scanNetwork();
+            Thread.sleep(5000);
+        }
+
+        /*while (true) {
             try {
                 XBeeResponse response = xbee.getResponse(30000);
                 handleResponse(response);
@@ -30,7 +32,7 @@ public class Main {
                 log("Nothing...");
                 scanNetwork();
             }
-        }
+        }*/
     }
 
     public static void setup() throws Exception {
@@ -68,12 +70,10 @@ public class Main {
             int reading = bytes[0];
             if (reading == 255) {
                 // This is a heartbeat message, we can ignore
+                System.out.println("HB");
             } else {
                 log("Reading: " + reading);
-
-                if (reading < THRESHOLD) {
-                    alarm.triggerAlarm();
-                }
+                alarm.triggerAlarm();
             }
 
         }

@@ -36,7 +36,7 @@ void loop() {
 		// Serial.println("Got packet");
 	}
 
-	if (now > timeOfLastRead + 100) {
+	if (now > timeOfLastRead + 50) {
 		// Just read and store the latest datapoint
 		timeOfLastRead = now;
 
@@ -44,7 +44,7 @@ void loop() {
 		filter.addDataPoint(distance);
 	}
 
-	if (now > timeOfLastCompute + 500) {
+	if (now > timeOfLastCompute + 200) {
 		timeOfLastCompute = now;
 
 		// Compute median, update state
@@ -60,7 +60,6 @@ void loop() {
 			if (median > RANGE_THRESHOLD) {
 				currentState = NOTHINGINRANGE;
 				updateLED();
-				sendToBase(median);
 			}
 		}
 	}
