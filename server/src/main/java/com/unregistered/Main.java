@@ -20,19 +20,14 @@ public class Main {
         }));
 
         while (true) {
-            scanNetwork();
-            Thread.sleep(5000);
-        }
-
-        /*while (true) {
             try {
-                XBeeResponse response = xbee.getResponse(30000);
+                XBeeResponse response = xbee.getResponse(15000);
                 handleResponse(response);
             } catch (XBeeTimeoutException e) {
                 log("Nothing...");
                 scanNetwork();
             }
-        }*/
+        }
     }
 
     public static void setup() throws Exception {
