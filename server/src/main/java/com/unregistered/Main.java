@@ -3,10 +3,11 @@ package com.unregistered;
 import com.rapplogic.xbee.api.*;
 import com.rapplogic.xbee.api.wpan.RxResponse64;
 
+import java.sql.Timestamp;
 import java.util.List;
 
 public class Main {
-    private static final int THRESHOLD = 60; // From the arduino sketch: when to set off an alarm
+    private static final int THRESHOLD = 80; // From the arduino sketch: when to set off an alarm
     private static XBee xbee = new XBee();
     private static AlarmService alarm = new AlarmService();
 
@@ -26,7 +27,7 @@ public class Main {
                 XBeeResponse response = xbee.getResponse(30000);
                 handleResponse(response);
             } catch (XBeeTimeoutException e) {
-                System.out.println("Nothing...");
+                log("Nothing...");
                 scanNetwork();
             }
         }
@@ -35,7 +36,7 @@ public class Main {
     public static void setup() throws Exception {
         String port = System.getProperty("serialport");
         xbee.open(port, 9600);
-        System.out.println("Setup complete");
+        log("Setup complete");
     }
 
     public static void teardown() {
@@ -50,7 +51,7 @@ public class Main {
         NetworkDiscovery nd = new NetworkDiscovery(xbee);
         List<NetworkDiscovery.NodeResponse> responses = nd.scan();
         for (NetworkDiscovery.NodeResponse response : responses) {
-            System.out.println("Response: " + response.getSerialAsHex());
+            log("Response: " + response.getSerialAsHex());
         }
     }
 
@@ -68,13 +69,19 @@ public class Main {
             if (reading < 0) {
                 // This is a heartbeat message, we can ignore
             } else {
+                log("Reading: " + reading);
+
                 if (reading < THRESHOLD) {
                     alarm.triggerAlarm();
                 }
             }
-            System.out.println("Reading: " + reading);
 
         }
+    }
+
+    public static void log(String msg) {
+        Timestamp now = new Timestamp(System.currentTimeMillis());
+        System.out.println("[" + now.toString() + "] " + msg);
     }
 
 }
