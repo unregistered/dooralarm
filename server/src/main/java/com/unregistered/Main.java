@@ -66,7 +66,7 @@ public class Main {
             }
 
             int reading = bytes[0];
-            if (reading < 0) {
+            if (reading == 255) {
                 // This is a heartbeat message, we can ignore
             } else {
                 log("Reading: " + reading);
