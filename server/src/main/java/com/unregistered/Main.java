@@ -51,7 +51,7 @@ public class Main {
         NetworkDiscovery nd = new NetworkDiscovery(xbee);
         List<NetworkDiscovery.NodeResponse> responses = nd.scan();
         for (NetworkDiscovery.NodeResponse response : responses) {
-            log("Response: " + response.getSerialAsHex());
+            log("Response: " + response.getSerialAsHex() + " RSSI: " + response.getRSSI());
         }
     }
 
